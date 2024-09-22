@@ -1,21 +1,132 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model LicenseeRecords.Web.Models.HomeViewModel
+
+@{
+	ViewData["Title"] = "Home Page";
 }
 
-<div class="govuk-grid-row">
+@if (Model.SuccessMessages.Any())
+{
+	<div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="notification-banner-title">
+		<div class="govuk-notification-banner__header">
+			<h2 class="govuk-notification-banner__title" id="notification-banner-title">Success</h2>
+		</div>
+		<div class="govuk-notification-banner__content">
+			<ul class="govuk-list govuk-list--bullet">
+				@foreach (var message in Model.SuccessMessages)
+				{
+					<li>@message</li>
+				}
+			</ul>
+		</div>
+	</div>
+}
 
-    <div class="govuk-grid-column-two-thirds">
+@if (Model.ErrorMessages.Any())
+{
+	<div class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" aria-describedby="error-summary-description">
+		<h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+		<div class="govuk-error-summary__body" id="error-summary-description">
+			<ul class="govuk-list govuk-list--bullet">
+				@foreach (var message in Model.ErrorMessages)
+				{
+					<li>@message</li>
+				}
+			</ul>
+		</div>
+	</div>
+}
 
-        <h1 class="govuk-heading-xl">Default page template</h1>
-        <p class="govuk-body">This is a paragraph inside a two-thirds wide column</p>
-              
-    </div>
+<h1 class="govuk-heading-xl">Default page template</h1>
 
-    <div class="govuk-grid-column-one-third">
-
-        <h2 class="govuk-heading-m">One-third column</h2>
-        <p class="govuk-body">This is a paragraph inside a one-third wide column</p>
-
-    </div>
-
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+	<div class="govuk-accordion__section">
+		<div class="govuk-accordion__section-header">
+			<h2 class="govuk-accordion__section-heading">
+				<span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+					Accounts
+				</span>
+			</h2>
+		</div>
+		<div id="accordion-default-content-1" class="govuk-accordion__section-content">
+			@if (Model.Accounts is not null && Model.Accounts.Any())
+			{
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Account Name</th>
+							<th scope="col" class="govuk-table__header">ID</th>
+							<th scope="col" class="govuk-table__header">Status</th>
+							<th scope="col" class="govuk-table__header">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						@foreach (var account in Model.Accounts)
+						{
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">@account.AccountName</td>
+								<td class="govuk-table__cell">@account.AccountId</td>
+								<td class="govuk-table__cell">@account.AccountStatus</td>
+								<td class="govuk-table__cell">
+									<a href="/accounts/edit/@account.AccountId" class="govuk-button govuk-button--secondary">Edit</a>
+									<form asp-action="DeleteAccount" asp-route-accountId="@account.AccountId" method="post" style="display:inline;">
+										<button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+											Delete
+										</button>
+									</form>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p class="govuk-body">No accounts found.</p>
+			}
+		</div>
+	</div>
+	<div class="govuk-accordion__section">
+		<div class="govuk-accordion__section-header">
+			<h2 class="govuk-accordion__section-heading">
+				<span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+					Products
+				</span>
+			</h2>
+		</div>
+		<div id="accordion-default-content-4" class="govuk-accordion__section-content">
+			@if (Model.Products is not null && Model.Products.Any())
+			{
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Product Name</th>
+							<th scope="col" class="govuk-table__header">ID</th>
+							<th scope="col" class="govuk-table__header">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						@foreach (var product in Model.Products)
+						{
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">@product.ProductName</td>
+								<td class="govuk-table__cell">@product.ProductId</td>
+								<td class="govuk-table__cell">
+									<a href="/accounts/edit/@product.ProductId" class="govuk-button govuk-button--secondary">Edit</a>
+									<form asp-action="DeleteProduct" asp-route-productId="@product.ProductId" method="post" style="display:inline;">
+										<button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+											Delete
+										</button>
+									</form>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p class="govuk-body">No products found.</p>
+			}
+		</div>
+	</div>
 </div>

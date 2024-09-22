@@ -1,15 +1,26 @@
-var builder = WebApplication.CreateBuilder(args);
+using FluentValidation;
+using LicenseeRecords.Models;
+using LicenseeRecords.WebAPI.Data;
+using LicenseeRecords.WebAPI.Repositories.Interfaces;
+using LicenseeRecords.WebAPI.Repositories.Repositories;
 
-// Add services to the container.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<IDataManager, DataManager>();
+
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+builder.Services.AddScoped<IValidator<Account>, AccountValidator>();
+builder.Services.AddScoped<IValidator<ProductLicence>, ProductLicenceValidator>();
+builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
