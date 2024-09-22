@@ -1,3 +1,5 @@
+using FluentValidation;
+using LicenseeRecords.Models;
 using LicenseeRecords.Web.Services.DataServices;
 using LicenseeRecords.Web.Services.Interfaces;
 
@@ -7,8 +9,13 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient("LicenseeRecordsApi", client => client.BaseAddress = new Uri("https://localhost:2222"));
+
 builder.Services.AddScoped<IAccountDataService, AccountDataService>();
 builder.Services.AddScoped<IProductDataService, ProductDataService>();
+
+builder.Services.AddScoped<IValidator<Account>, AccountValidator>();
+builder.Services.AddScoped<IValidator<ProductLicence>, ProductLicenceValidator>();
+builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
 
 WebApplication app = builder.Build();
 

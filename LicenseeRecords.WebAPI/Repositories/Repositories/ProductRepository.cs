@@ -3,7 +3,6 @@ using static LicenseeRecords.WebAPI.Exceptions.CustomExceptions;
 using LicenseeRecords.WebAPI.Repositories.Interfaces;
 using LicenseeRecords.WebAPI.Data;
 using LicenseeRecords.WebAPI.Helpers;
-using System.Security.Principal;
 
 namespace LicenseeRecords.WebAPI.Repositories.Repositories;
 public class ProductRepository(IDataManager dataManager) : IProductRepository
