@@ -1,0 +1,136 @@
+﻿@model Account
+
+@{
+    ViewData["Title"] = "Account Details";
+}
+
+@if (TempData["SuccessMessages"] is not null)
+{
+    string[]? successMessages = TempData["SuccessMessages"]?.ToString()?.Split(';');
+    if (successMessages is not null && successMessages.Any())
+    {
+        <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="notification-banner-title">
+            <div class="govuk-notification-banner__header">
+                <h2 class="govuk-notification-banner__title" id="notification-banner-title">Success</h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+                <ul class="govuk-list govuk-list--bullet">
+                    @foreach (string message in successMessages)
+                    {
+                        <li>@message</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+}
+
+@if (TempData["ErrorMessages"] is not null)
+{
+    string[]? errorMessages = TempData["ErrorMessages"]?.ToString()?.Split(';');
+    if (errorMessages is not null && errorMessages.Any())
+    {
+        <div class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" aria-describedby="error-summary-description">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <div class="govuk-error-summary__body" id="error-summary-description">
+                <ul class="govuk-list govuk-list--bullet">
+                    @foreach (string message in errorMessages)
+                    {
+                        <li>@message</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+}
+
+<a href="/" class="govuk-back-link">Back</a>
+
+<h1 class="govuk-heading-l">Account Details</h1>
+
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Account ID
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @Model.AccountId
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Account Name
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @Model.AccountName
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Account Status
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @Model.AccountStatus
+        </dd>
+    </div>
+</dl>
+
+@if (Model.ProductLicence.Any())
+{
+    <h2 class="govuk-heading-m">Product Licences</h2>
+    <div class="govuk-tabs" data-module="govuk-tabs">
+        <h2 class="govuk-tabs__title">Contents</h2>
+        <ul class="govuk-tabs__list">
+            @for (int i = 0; i < Model.ProductLicence.Count; i++)
+            {
+                <li class="govuk-tabs__list-item @(i == 0 ? "govuk-tabs__list-item--selected" : "")">
+                    <a class="govuk-tabs__tab" href="#licence-@i">Licence @(i+1)</a>
+                </li>
+            }
+        </ul>
+
+
+        @for (int i = 0; i < Model.ProductLicence.Count; i++)
+        {
+            <section class="govuk-tabs__panel @(i == 0 ? "" : "govuk-tabs__panel--hidden")" id="licence-@i">
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Licence ID</dt>
+                        <dd class="govuk-summary-list__value">@Model.ProductLicence[i].LicenceId</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Licence Status</dt>
+                        <dd class="govuk-summary-list__value">@Model.ProductLicence[i].LicenceStatus</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">From Date</dt>
+                        <dd class="govuk-summary-list__value">@Model.ProductLicence[i].LicenceFromDate?.ToString("dd/MM/yyyy")</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">To Date</dt>
+                        <dd class="govuk-summary-list__value">@Model.ProductLicence[i].LicenceToDate?.ToString("dd/MM/yyyy")</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Product</dt>
+                        <dd class="govuk-summary-list__value">@Model.ProductLicence[i].Product.ProductName</dd>
+                    </div>
+                </dl>
+
+                <a href="/account/@Model.AccountId/productlicence/@Model.ProductLicence[i].LicenceId/edit" class="govuk-button govuk-button--primary">Edit</a>
+                <form asp-action="DeleteProductLicence" asp-route-accountId="@Model.AccountId" asp-route-productLicenceId="@Model.ProductLicence[i].LicenceId" method="post" style="display:inline;">
+                    <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+                        Delete
+                    </button>
+                </form>
+            </section>
+        }
+    </div>
+}
+else
+{
+    <p class="govuk-body">This account does not hold any product licences.</p>
+}
+
+<a href="/account/@Model.AccountId/productlicence/create" class="govuk-button govuk-button--primary">Create Product Licence</a>

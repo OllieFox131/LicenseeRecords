@@ -1,0 +1,81 @@
+﻿@model ProductLicence
+
+@{
+    ViewData["Title"] = "Edit Product Licence";
+}
+
+<a href="/" class="govuk-back-link">Back</a>
+
+<h1 class="govuk-heading-l">Edit Product Licence</h1>
+
+<form asp-action="Edit" method="post" class="govuk-form-group">
+    <div class="govuk-form-group">
+        <label class="govuk-label" asp-for="LicenceId">Licence ID (Not Editable)</label>
+        <input class="govuk-input @((ViewData.ModelState["LicenceId"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="LicenceId" readonly />
+        @if (ViewData.ModelState.TryGetValue("LicenceId", out ModelStateEntry? licenceIdEntry) && licenceIdEntry.Errors.Count > 0)
+        {
+            foreach (var error in licenceIdEntry.Errors)
+            {
+                <span id="product-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+                </span>
+            }
+        }
+    </div>
+
+    <div class="govuk-form-group">
+        <label class="govuk-label" asp-for="LicenceStatus">
+            Licence Status
+        </label>
+        <select class="govuk-select @((ViewData.ModelState["LicenceStatus"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="LicenceStatus">
+            <option value="">Select a status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+        @if (ViewData.ModelState.TryGetValue("LicenceStatus", out ModelStateEntry? licenceStatusEntry) && licenceStatusEntry.Errors.Count > 0)
+        {
+            foreach (var error in licenceStatusEntry.Errors)
+            {
+                <span id="licence-status-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+                </span>
+            }
+        }
+    </div>
+
+    <div class="govuk-form-group">
+        <label class="govuk-label" asp-for="LicenceFromDate">
+            From Date
+        </label>
+        <input type="date" class="govuk-input @((ViewData.ModelState["LicenceFromDate"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="LicenceFromDate" />
+        @if (ViewData.ModelState.TryGetValue("LicenceFromDate", out ModelStateEntry? licenceFromDateEntry) && licenceFromDateEntry.Errors.Count > 0)
+        {
+            foreach (var error in licenceFromDateEntry.Errors)
+            {
+                <span id="licence-from-date-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+                </span>
+            }
+        }
+    </div>
+
+    <div class="govuk-form-group">
+        <label class="govuk-label" asp-for="LicenceToDate">
+            To Date
+        </label>
+        <input type="date" class="govuk-input @((ViewData.ModelState["LicenceToDate"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="LicenceToDate" />
+        @if (ViewData.ModelState.TryGetValue("LicenceToDate", out ModelStateEntry? licenceToDateEntry) && licenceToDateEntry.Errors.Count > 0)
+        {
+            foreach (var error in licenceToDateEntry.Errors)
+            {
+                <span id="licence-to-date-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+                </span>
+            }
+        }
+    </div>
+
+    <button type="submit" class="govuk-button govuk-button--primary" style="margin-top: 20px;">
+        Edit Product Licence
+    </button>
+</form>

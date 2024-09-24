@@ -1,0 +1,65 @@
+﻿@model Account
+
+@{
+	ViewData["Title"] = "Edit Account";
+}
+
+<a href="/" class="govuk-back-link">Back</a>
+
+<h1 class="govuk-heading-l">Edit Account</h1>
+
+<form asp-action="Edit" method="post" class="govuk-form-group">
+	<div class="govuk-form-group">
+        <label class="govuk-label" asp-for="AccountId">Account ID (Not Editable)</label>
+		<input class="govuk-input @((ViewData.ModelState["AccountId"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="AccountId" readonly />
+		@if (ViewData.ModelState.TryGetValue("AccountId", out ModelStateEntry? accountIdEntry) && accountIdEntry.Errors.Count > 0)
+        {
+            foreach (var error in accountIdEntry.Errors)
+            {
+                <span id="account-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+                </span>
+            }
+        }
+    </div>
+
+	<div class="govuk-form-group">
+		<label class="govuk-label" asp-for="AccountName">
+			Account Name
+		</label>
+		<input class="govuk-input @((ViewData.ModelState["AccountName"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="AccountName" />
+		@if (ViewData.ModelState.TryGetValue("AccountName", out ModelStateEntry? accountNameEntry) && accountNameEntry.Errors.Count > 0)
+		{
+			foreach (var error in accountNameEntry.Errors)
+			{
+				<span id="account-name-error" class="govuk-error-message">
+					<span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+				</span>
+			}
+		}
+	</div>
+
+	<div class="govuk-form-group">
+		<label class="govuk-label" asp-for="AccountStatus">
+			Account Status
+		</label>
+		<select class="govuk-select @((ViewData.ModelState["AccountStatus"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="AccountStatus">
+			<option value="">Select a status</option>
+			<option value="Active">Active</option>
+			<option value="Inactive">Inactive</option>
+		</select>
+		@if (ViewData.ModelState.TryGetValue("AccountStatus", out ModelStateEntry? accountStatusEntry) && accountStatusEntry.Errors.Count > 0)
+		{
+			foreach (var error in accountStatusEntry.Errors)
+			{
+				<span id="account-status-error" class="govuk-error-message">
+					<span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+				</span>
+			}
+		}
+	</div>
+
+	<button type="submit" class="govuk-button govuk-button--primary" style="margin-top: 20px;">
+		Edit Account
+	</button>
+</form>
