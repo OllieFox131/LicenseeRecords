@@ -79,6 +79,7 @@
                             <td class="govuk-table__cell">@account.AccountId</td>
                             <td class="govuk-table__cell">@account.AccountStatus</td>
                             <td class="govuk-table__cell">
+                                <a href="/account/view/@account.AccountId" class="govuk-button govuk-button--secondary">View</a>
                                 <a href="/account/edit/@account.AccountId" class="govuk-button govuk-button--secondary">Edit</a>
                                 <form asp-action="DeleteAccount" asp-route-accountId="@account.AccountId" method="post" style="display:inline;">
                                     <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
@@ -95,6 +96,8 @@
         {
             <p class="govuk-body">No accounts found.</p>
         }
+
+        <a href="/account/create" class="govuk-button govuk-button--primary">Create</a>
     </section>
 
     <section class="govuk-tabs__panel" id="products">
