@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace LicenseeRecords.Web.Controllers;
 
-public class AccountController(ILogger<AccountController> logger, IAccountDataService accountDataService, IValidator<Account> validator) : Controller
+public class AccountController(IAccountDataService accountDataService, IValidator<Account> validator) : Controller
 {
 	[HttpGet]
 	public IActionResult Create()

@@ -2,14 +2,9 @@
 using LicenseeRecords.Web.Services.Interfaces;
 
 namespace LicenseeRecords.Web.Services.DataServices;
-public class AccountDataService : IAccountDataService
+public class AccountDataService(IHttpClientFactory httpClientFactory) : IAccountDataService
 {
-	private readonly HttpClient _httpClient;
-
-	public AccountDataService(IHttpClientFactory httpClientFactory)
-	{
-		_httpClient = httpClientFactory.CreateClient("LicenseeRecordsApi");
-	}
+	private readonly HttpClient _httpClient = httpClientFactory.CreateClient("LicenseeRecordsApi");
 
 	public async Task<(Account[]? accounts, string? errorMessage)> GetAccounts()
 	{

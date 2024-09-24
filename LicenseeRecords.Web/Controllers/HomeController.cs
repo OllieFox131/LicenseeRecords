@@ -1,4 +1,3 @@
-using LicenseeRecords.Models;
 using LicenseeRecords.Web.Models;
 using LicenseeRecords.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +5,7 @@ using System.Diagnostics;
 
 namespace LicenseeRecords.Web.Controllers;
 
-public class HomeController(ILogger<HomeController> logger, IAccountDataService accountDataService, IProductDataService productDataService) : Controller
+public class HomeController(IAccountDataService accountDataService, IProductDataService productDataService) : Controller
 {
 	public async Task<IActionResult> Index()
 	{

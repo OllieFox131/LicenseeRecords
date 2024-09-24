@@ -3,14 +3,13 @@ using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using LicenseeRecords.Models;
 using LicenseeRecords.Web.Models;
-using LicenseeRecords.Web.Services.DataServices;
 using LicenseeRecords.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace LicenseeRecords.Web.Controllers;
 
-public class ProductController(ILogger<ProductController> logger, IProductDataService productDataService, IValidator<Product> validator) : Controller
+public class ProductController(IProductDataService productDataService, IValidator<Product> validator) : Controller
 {
 	[HttpGet]
 	public IActionResult Create()
@@ -22,7 +21,7 @@ public class ProductController(ILogger<ProductController> logger, IProductDataSe
 	public async Task<IActionResult> Edit(int id)
 	{
 		(Product? product, string? errorMessage) = await productDataService.GetProduct(id);
-		
+
 		return View(product);
 	}
 

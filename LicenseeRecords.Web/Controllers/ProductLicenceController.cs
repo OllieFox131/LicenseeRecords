@@ -3,15 +3,13 @@ using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using LicenseeRecords.Models;
 using LicenseeRecords.Web.Models;
-using LicenseeRecords.Web.Services.DataServices;
 using LicenseeRecords.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Security.Principal;
 
 namespace LicenseeRecords.Web.Controllers;
 
-public class ProductLicenceController(ILogger<AccountController> logger, IAccountDataService accountDataService, IProductDataService productDataService, IValidator<ProductLicence> validator) : Controller
+public class ProductLicenceController(IAccountDataService accountDataService, IValidator<ProductLicence> validator) : Controller
 {
 	[Route("account/{accountId}/productlicence/create")]
 	public IActionResult Create(int accountId)

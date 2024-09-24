@@ -1,8 +1,8 @@
 ﻿using LicenseeRecords.Models;
-using static LicenseeRecords.WebAPI.Exceptions.CustomExceptions;
-using LicenseeRecords.WebAPI.Repositories.Interfaces;
 using LicenseeRecords.WebAPI.Data;
 using LicenseeRecords.WebAPI.Helpers;
+using LicenseeRecords.WebAPI.Repositories.Interfaces;
+using static LicenseeRecords.WebAPI.Exceptions.CustomExceptions;
 
 namespace LicenseeRecords.WebAPI.Repositories.Repositories;
 public class ProductRepository(IDataManager dataManager) : IProductRepository
