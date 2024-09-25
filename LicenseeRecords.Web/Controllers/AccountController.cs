@@ -24,7 +24,7 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 
 		if (errorMessage is not null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+			AddErrorMessageToTempData(errorMessage);
 		}
 
 		return View(account);
@@ -33,11 +33,13 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 	[HttpGet]
 	public async Task<IActionResult> View(int id)
 	{
-		(Account? account, string? errorMessage) = await accountDataService.GetAccount(id);
+		string? errorMessage;
+
+		(Account? account, errorMessage) = await accountDataService.GetAccount(id);
 
 		if (errorMessage is not null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+			AddErrorMessageToTempData(errorMessage);
 		}
 
 		return View(account);
@@ -46,6 +48,9 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 	[HttpPost]
 	public async Task<IActionResult> Create(Account account)
 	{
+		string? errorMessage;
+		string? successMessage;
+
 		ValidationResult validationResult = await validator.ValidateAsync(account);
 		if (!validationResult.IsValid)
 		{
@@ -53,16 +58,16 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 			return View(account);
 		}
 
-		(Account? createdAccount, string? successMessage, string? errorMessage) = await accountDataService.CreateAccount(account);
+		(Account? createdAccount, successMessage, errorMessage) = await accountDataService.CreateAccount(account);
 
 		if (successMessage is not null)
 		{
-			TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
+			AddSuccessMessageToTempData(successMessage);
 		}
 
 		if (errorMessage is not null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+			AddErrorMessageToTempData(errorMessage);
 		}
 
 		return RedirectToAction("index", "home");
@@ -72,6 +77,7 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 	public async Task<IActionResult> Edit(Account account)
 	{
 		string? errorMessage;
+		string? successMessage;
 
 		ValidationResult validationResult = await validator.ValidateAsync(account);
 		if (!validationResult.IsValid)
@@ -80,27 +86,32 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 			return View(account);
 		}
 
+		#region Assign Product Licences to the Updated Account
 		(Account? oldAccount, errorMessage) = await accountDataService.GetAccount(account.AccountId);
+
+		if (errorMessage is not null)
+		{
+			AddErrorMessageToTempData(errorMessage);
+		}
 
 		if (oldAccount is null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
-
 			return RedirectToAction("index", "home");
 		}
 
 		account.ProductLicence = oldAccount.ProductLicence;
+		#endregion
 
-		(string? successMessage, errorMessage) = await accountDataService.UpdateAccount(account.AccountId, account);
-
+		(successMessage, errorMessage) = await accountDataService.UpdateAccount(account.AccountId, account);
+		
 		if (successMessage is not null)
 		{
-			TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
+			AddSuccessMessageToTempData(successMessage);
 		}
 
 		if (errorMessage is not null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+			AddErrorMessageToTempData(errorMessage);
 		}
 
 		return RedirectToAction("index", "home");
@@ -110,15 +121,14 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 	public async Task<IActionResult> DeleteProductLicence(int accountId, int productLicenceId)
 	{
 		string? errorMessage;
+		string? successMessage;
 
+		#region Remove Product Licence From Account To Then Update The Entire Account
 		(Account? account, errorMessage) = await accountDataService.GetAccount(accountId);
 
 		if (account is null)
 		{
-			errorMessage = "Something went wrong.";
-
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
-
+			AddErrorMessageToTempData("Something went wrong.");
 			return RedirectToAction("index", "home");
 		}
 
@@ -126,25 +136,23 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 
 		if (productLicence is null)
 		{
-			errorMessage = "Something went wrong.";
-
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
-
+			AddErrorMessageToTempData("Something went wrong.");
 			return RedirectToAction("index", "home");
 		}
 
 		account.ProductLicence.Remove(productLicence);
+		#endregion
 
-		(string? successMessage, errorMessage) = await accountDataService.UpdateAccount(accountId, account);
+		(successMessage, errorMessage) = await accountDataService.UpdateAccount(accountId, account);
 
 		if (successMessage is not null)
 		{
-			TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
+			AddSuccessMessageToTempData(successMessage);
 		}
 
 		if (errorMessage is not null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+			AddErrorMessageToTempData(errorMessage);
 		}
 
 		return RedirectToAction("view", "account", new { id = accountId });
@@ -155,5 +163,15 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 	public IActionResult Error()
 	{
 		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+	}
+
+	private void AddErrorMessageToTempData(string? errorMessage)
+	{
+		TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+	}
+
+	private void AddSuccessMessageToTempData(string? successMessage)
+	{
+		TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
 	}
 }

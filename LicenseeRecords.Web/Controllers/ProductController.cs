@@ -20,7 +20,14 @@ public class ProductController(IProductDataService productDataService, IValidato
 	[HttpGet]
 	public async Task<IActionResult> Edit(int id)
 	{
-		(Product? product, string? errorMessage) = await productDataService.GetProduct(id);
+		string? errorMessage;
+
+		(Product? product, errorMessage) = await productDataService.GetProduct(id);
+
+		if (errorMessage is not null)
+		{
+			AddErrorMessageToTempData(errorMessage);
+		}
 
 		return View(product);
 	}
@@ -28,6 +35,9 @@ public class ProductController(IProductDataService productDataService, IValidato
 	[HttpPost]
 	public async Task<IActionResult> Create(Product product)
 	{
+		string? errorMessage;
+		string? successMessage;
+
 		ValidationResult validationResult = await validator.ValidateAsync(product);
 		if (!validationResult.IsValid)
 		{
@@ -35,16 +45,16 @@ public class ProductController(IProductDataService productDataService, IValidato
 			return View(product);
 		}
 
-		(Product? createdProduct, string? successMessage, string? errorMessage) = await productDataService.CreateProduct(product);
+		(Product? createdProduct, successMessage, errorMessage) = await productDataService.CreateProduct(product);
 
 		if (successMessage is not null)
 		{
-			TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
+			AddSuccessMessageToTempData(successMessage);
 		}
 
 		if (errorMessage is not null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+			AddErrorMessageToTempData(errorMessage);
 		}
 
 		string? url = Url.Action("index", "home");
@@ -55,6 +65,9 @@ public class ProductController(IProductDataService productDataService, IValidato
 	[HttpPost]
 	public async Task<IActionResult> Edit(Product product)
 	{
+		string? errorMessage;
+		string? successMessage;
+
 		ValidationResult validationResult = await validator.ValidateAsync(product);
 		if (!validationResult.IsValid)
 		{
@@ -62,16 +75,16 @@ public class ProductController(IProductDataService productDataService, IValidato
 			return View(product);
 		}
 
-		(string? successMessage, string? errorMessage) = await productDataService.UpdateProduct(product.ProductId, product);
+		(successMessage, errorMessage) = await productDataService.UpdateProduct(product.ProductId, product);
 
 		if (successMessage is not null)
 		{
-			TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
+			AddSuccessMessageToTempData(successMessage);
 		}
 
 		if (errorMessage is not null)
 		{
-			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+			AddErrorMessageToTempData(errorMessage);
 		}
 
 		string? url = Url.Action("index", "home");
@@ -84,5 +97,15 @@ public class ProductController(IProductDataService productDataService, IValidato
 	public IActionResult Error()
 	{
 		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+	}
+
+	private void AddErrorMessageToTempData(string? errorMessage)
+	{
+		TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+	}
+
+	private void AddSuccessMessageToTempData(string? successMessage)
+	{
+		TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
 	}
 }
