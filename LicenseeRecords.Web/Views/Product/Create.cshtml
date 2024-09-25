@@ -1,23 +1,18 @@
-﻿
-@model Product
+﻿@model Product
+
+<a href="/" class="govuk-back-link">Back</a>
 
 <h1 class="govuk-heading-l">Create Product</h1>
 
 <form asp-action="Create" method="post" class="govuk-form-group">
     <div class="govuk-form-group">
-        <label class="govuk-label" asp-for="ProductName">
-            Product Name
-        </label>
+        <label class="govuk-label" asp-for="ProductName">Product Name</label>
         <input class="govuk-input @((ViewData.ModelState["ProductName"]?.Errors.Count > 0) ? "govuk-input--error" : "")" asp-for="ProductName" />
-        @if (ViewData.ModelState.TryGetValue("ProductName", out ModelStateEntry? productNameEntry) && productNameEntry.Errors.Count > 0)
-        {
-            foreach (var error in productNameEntry.Errors)
-            {
-                <span id="product-name-error" class="govuk-error-message">
-                    <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
-                </span>
-            }
+
+        @{
+            ViewData.ModelState.TryGetValue("ProductName", out ModelStateEntry? productNameEntry);
         }
+        <partial name="_ValidationErrors" model="productNameEntry" />
     </div>
 
     <button type="submit" class="govuk-button govuk-button--primary" style="margin-top: 20px;">

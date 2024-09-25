@@ -1,0 +1,11 @@
+﻿@model ModelStateEntry
+
+@if (Model != null && Model.Errors.Count > 0)
+{
+    foreach (var error in Model.Errors)
+    {
+        <span class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
+        </span>
+    }
+}

@@ -7,41 +7,13 @@
 @if (TempData["SuccessMessages"] is not null)
 {
     string[]? successMessages = TempData["SuccessMessages"]?.ToString()?.Split(';');
-    if (successMessages is not null && successMessages.Any())
-    {
-        <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="notification-banner-title">
-            <div class="govuk-notification-banner__header">
-                <h2 class="govuk-notification-banner__title" id="notification-banner-title">Success</h2>
-            </div>
-            <div class="govuk-notification-banner__content">
-                <ul class="govuk-list govuk-list--bullet">
-                    @foreach (string message in successMessages)
-                    {
-                        <li>@message</li>
-                    }
-                </ul>
-            </div>
-        </div>
-    }
+    <partial name="_SuccessNotificationBanner" model="successMessages" />
 }
 
 @if (TempData["ErrorMessages"] is not null)
 {
     string[]? errorMessages = TempData["ErrorMessages"]?.ToString()?.Split(';');
-    if (errorMessages is not null && errorMessages.Any())
-    {
-        <div class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" aria-describedby="error-summary-description">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-            <div class="govuk-error-summary__body" id="error-summary-description">
-                <ul class="govuk-list govuk-list--bullet">
-                    @foreach (string message in errorMessages)
-                    {
-                        <li>@message</li>
-                    }
-                </ul>
-            </div>
-        </div>
-    }
+    <partial name="_ErrorNotificationBanner" model="errorMessages" />
 }
 
 <a href="/" class="govuk-back-link">Back</a>

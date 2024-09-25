@@ -32,6 +32,7 @@ public class ProductLicenceController(IAccountDataService accountDataService, IP
 			return RedirectToAction("view", "account", new { id = accountId });
 		}
 
+		productLicenceCreateEditModel.AccountId = accountId;
 		productLicenceCreateEditModel.Products = products;
 
 		return View(productLicenceCreateEditModel);
@@ -89,6 +90,7 @@ public class ProductLicenceController(IAccountDataService accountDataService, IP
 			return RedirectToAction("view", "account", new { id = accountId });
 		}
 
+		productLicenceCreateEditModel.AccountId = accountId;
 		productLicenceCreateEditModel.Products = products;
 
 		return View(productLicenceCreateEditModel);
@@ -124,6 +126,7 @@ public class ProductLicenceController(IAccountDataService accountDataService, IP
 			productLicenceCreateEditModel.ProductLicence.Product.ProductName = matchingProduct.ProductName;
 		}
 
+		productLicenceCreateEditModel.AccountId = accountId;
 		productLicenceCreateEditModel.Products = products;
 
 		ValidationResult validationResult = await validator.ValidateAsync(productLicenceCreateEditModel.ProductLicence);
@@ -196,6 +199,7 @@ public class ProductLicenceController(IAccountDataService accountDataService, IP
 			productLicenceCreateEditModel.ProductLicence.Product.ProductName = matchingProduct.ProductName;
 		}
 
+		productLicenceCreateEditModel.AccountId = accountId;
 		productLicenceCreateEditModel.Products = products;
 
 		ValidationResult validationResult = await validator.ValidateAsync(productLicenceCreateEditModel.ProductLicence);
@@ -212,26 +216,32 @@ public class ProductLicenceController(IAccountDataService accountDataService, IP
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
-		if (account is not null)
+		if (account is null)
 		{
-			ProductLicence? oldProductLicence = account.ProductLicence.Find(pl => pl.LicenceId == productLicenceId);
+			errorMessage = "Something went wrong.";
 
-			int positionOfOldLicence = account.ProductLicence.IndexOf(oldProductLicence!);
+			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 
-			account.ProductLicence.Insert(positionOfOldLicence, productLicenceCreateEditModel.ProductLicence);
-			account.ProductLicence.Remove(oldProductLicence!);
+			return RedirectToAction("view", "account", new { id = accountId });
+		}
 
-			(successMessage, errorMessage) = await accountDataService.UpdateAccount(account.AccountId, account);
+		ProductLicence? oldProductLicence = account.ProductLicence.Find(pl => pl.LicenceId == productLicenceId);
 
-			if (successMessage is not null)
-			{
-				TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
-			}
+		int positionOfOldLicence = account.ProductLicence.IndexOf(oldProductLicence!);
 
-			if (errorMessage is not null)
-			{
-				TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
-			}
+		account.ProductLicence.Insert(positionOfOldLicence, productLicenceCreateEditModel.ProductLicence);
+		account.ProductLicence.Remove(oldProductLicence!);
+
+		(successMessage, errorMessage) = await accountDataService.UpdateAccount(account.AccountId, account);
+
+		if (successMessage is not null)
+		{
+			TempData["SuccessMessages"] = TempData.TryGetValue("SuccessMessages", out object? value) ? value + ";" + successMessage : successMessage;
+		}
+
+		if (errorMessage is not null)
+		{
+			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
 		return RedirectToAction("view", "account", new { id = accountId });

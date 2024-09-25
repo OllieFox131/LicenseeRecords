@@ -65,12 +65,14 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
-		return RedirectToAction("Index", "Home");
+		return RedirectToAction("index", "home");
 	}
 
 	[HttpPost]
 	public async Task<IActionResult> Edit(Account account)
 	{
+		string? errorMessage;
+
 		ValidationResult validationResult = await validator.ValidateAsync(account);
 		if (!validationResult.IsValid)
 		{
@@ -78,7 +80,18 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 			return View(account);
 		}
 
-		(string? successMessage, string? errorMessage) = await accountDataService.UpdateAccount(account.AccountId, account);
+		(Account? oldAccount, errorMessage) = await accountDataService.GetAccount(account.AccountId);
+
+		if (oldAccount is null)
+		{
+			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
+
+			return RedirectToAction("index", "home");
+		}
+
+		account.ProductLicence = oldAccount.ProductLicence;
+
+		(string? successMessage, errorMessage) = await accountDataService.UpdateAccount(account.AccountId, account);
 
 		if (successMessage is not null)
 		{
@@ -90,7 +103,7 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
-		return RedirectToAction("Index", "Home");
+		return RedirectToAction("index", "home");
 	}
 
 	[HttpPost]
@@ -106,7 +119,7 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction("index", "home");
 		}
 
 		ProductLicence? productLicence = account.ProductLicence.Find(pl => pl.LicenceId == productLicenceId);
@@ -117,7 +130,7 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction("index", "home");
 		}
 
 		account.ProductLicence.Remove(productLicence);
@@ -134,7 +147,7 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
-		return RedirectToAction("View", "Account", new { id = accountId });
+		return RedirectToAction("view", "account", new { id = accountId });
 	}
 
 

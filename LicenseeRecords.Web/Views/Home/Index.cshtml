@@ -7,136 +7,107 @@
 @if (TempData["SuccessMessages"] is not null)
 {
 	string[]? successMessages = TempData["SuccessMessages"]?.ToString()?.Split(';');
-	if (successMessages is not null && successMessages.Any())
-	{
-		<div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="notification-banner-title">
-			<div class="govuk-notification-banner__header">
-				<h2 class="govuk-notification-banner__title" id="notification-banner-title">Success</h2>
-			</div>
-			<div class="govuk-notification-banner__content">
-				<ul class="govuk-list govuk-list--bullet">
-					@foreach (string message in successMessages)
-					{
-						<li>@message</li>
-					}
-				</ul>
-			</div>
-		</div>
-	}
+	<partial name="_SuccessNotificationBanner" model="successMessages" />
 }
 
 @if (TempData["ErrorMessages"] is not null)
 {
 	string[]? errorMessages = TempData["ErrorMessages"]?.ToString()?.Split(';');
-	if (errorMessages is not null && errorMessages.Any())
-	{
-		<div class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" aria-describedby="error-summary-description">
-			<h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-			<div class="govuk-error-summary__body" id="error-summary-description">
-				<ul class="govuk-list govuk-list--bullet">
-					@foreach (string message in errorMessages)
-					{
-						<li>@message</li>
-					}
-				</ul>
-			</div>
-		</div>
-	}
+	<partial name="_ErrorNotificationBanner" model="errorMessages" />
 }
 
-
-<h1 class="govuk-heading-xl">Default page template</h1>
+<h1 class="govuk-heading-xl">Licensee Records</h1>
 
 <div class="govuk-tabs" data-module="govuk-tabs">
-    <h2 class="govuk-tabs__title">Content</h2>
+	<h2 class="govuk-tabs__title">Content</h2>
 
-    <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#accounts">Accounts (@(Model.Accounts is not null ? Model.Accounts.Count() : 0))</a>
-        </li>
-        <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#products">Products (@(Model.Products is not null ? Model.Products.Count() : 0))</a>
-        </li>
-    </ul>
+	<ul class="govuk-tabs__list">
+		<li class="govuk-tabs__list-item">
+			<a class="govuk-tabs__tab" href="#accounts">Accounts (@(Model.Accounts is not null ? Model.Accounts.Count() : 0))</a>
+		</li>
+		<li class="govuk-tabs__list-item">
+			<a class="govuk-tabs__tab" href="#products">Products (@(Model.Products is not null ? Model.Products.Count() : 0))</a>
+		</li>
+	</ul>
 
-    <section class="govuk-tabs__panel" id="accounts">
-        @if (Model.Accounts is not null && Model.Accounts.Any())
-        {
-            <table class="govuk-table">
-                <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">ID</th>
-                        <th scope="col" class="govuk-table__header">Account Name</th>
-                        <th scope="col" class="govuk-table__header">Status</th>
-                        <th scope="col" class="govuk-table__header">Licences</th>
-                        <th scope="col" class="govuk-table__header">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    @foreach (Account account in Model.Accounts)
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">@account.AccountId</td>
-                            <td class="govuk-table__cell">@account.AccountName</td>
-                            <td class="govuk-table__cell">@account.AccountStatus</td>
-                            <td class="govuk-table__cell">@account.ProductLicence.Count()</td>
-                            <td class="govuk-table__cell">
-                                <a href="/account/view/@account.AccountId" class="govuk-button govuk-button--secondary">View</a>
-                                <a href="/account/edit/@account.AccountId" class="govuk-button govuk-button--secondary">Edit</a>
-                                <form asp-action="DeleteAccount" asp-route-accountId="@account.AccountId" method="post" style="display:inline;">
-                                    <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p class="govuk-body">No accounts found.</p>
-        }
+	<section class="govuk-tabs__panel" id="accounts">
+		@if (Model.Accounts is not null && Model.Accounts.Any())
+		{
+			<table class="govuk-table">
+				<thead class="govuk-table__head">
+					<tr class="govuk-table__row">
+						<th scope="col" class="govuk-table__header">ID</th>
+						<th scope="col" class="govuk-table__header">Account Name</th>
+						<th scope="col" class="govuk-table__header">Status</th>
+						<th scope="col" class="govuk-table__header">Licences</th>
+						<th scope="col" class="govuk-table__header">Actions</th>
+					</tr>
+				</thead>
+				<tbody class="govuk-table__body">
+					@foreach (Account account in Model.Accounts)
+					{
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">@account.AccountId</td>
+							<td class="govuk-table__cell">@account.AccountName</td>
+							<td class="govuk-table__cell">@account.AccountStatus</td>
+							<td class="govuk-table__cell">@account.ProductLicence.Count()</td>
+							<td class="govuk-table__cell">
+								<a href="/account/view/@account.AccountId" class="govuk-button govuk-button--secondary">View</a>
+								<a href="/account/edit/@account.AccountId" class="govuk-button govuk-button--secondary">Edit</a>
+								<form asp-action="DeleteAccount" asp-route-accountId="@account.AccountId" method="post" style="display:inline;">
+									<button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+										Delete
+									</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+		else
+		{
+			<p class="govuk-body">No accounts found.</p>
+		}
 
-        <a href="/account/create" class="govuk-button govuk-button--primary">Create</a>
-    </section>
+		<a href="/account/create" class="govuk-button govuk-button--primary">Create</a>
+	</section>
 
-    <section class="govuk-tabs__panel" id="products">
-        @if (Model.Products is not null && Model.Products.Any())
-        {
-            <table class="govuk-table">
-                <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">ID</th>
-                        <th scope="col" class="govuk-table__header">Product Name</th>
-                        <th scope="col" class="govuk-table__header">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    @foreach (Product product in Model.Products)
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">@product.ProductId</td>
-                            <td class="govuk-table__cell">@product.ProductName</td>
-                            <td class="govuk-table__cell">
-                                <a href="/product/edit/@product.ProductId" class="govuk-button govuk-button--secondary">Edit</a>
-                                <form asp-action="DeleteProduct" asp-route-productId="@product.ProductId" method="post" style="display:inline;">
-                                    <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p class="govuk-body">No products found.</p>
-        }
+	<section class="govuk-tabs__panel" id="products">
+		@if (Model.Products is not null && Model.Products.Any())
+		{
+			<table class="govuk-table">
+				<thead class="govuk-table__head">
+					<tr class="govuk-table__row">
+						<th scope="col" class="govuk-table__header">ID</th>
+						<th scope="col" class="govuk-table__header">Product Name</th>
+						<th scope="col" class="govuk-table__header">Actions</th>
+					</tr>
+				</thead>
+				<tbody class="govuk-table__body">
+					@foreach (Product product in Model.Products)
+					{
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">@product.ProductId</td>
+							<td class="govuk-table__cell">@product.ProductName</td>
+							<td class="govuk-table__cell">
+								<a href="/product/edit/@product.ProductId" class="govuk-button govuk-button--secondary">Edit</a>
+								<form asp-action="DeleteProduct" asp-route-productId="@product.ProductId" method="post" style="display:inline;">
+									<button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+										Delete
+									</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+		else
+		{
+			<p class="govuk-body">No products found.</p>
+		}
 
-        <a href="/product/create" class="govuk-button govuk-button--primary">Create</a>
-    </section>
+		<a href="/product/create" class="govuk-button govuk-button--primary">Create</a>
+	</section>
 </div>
