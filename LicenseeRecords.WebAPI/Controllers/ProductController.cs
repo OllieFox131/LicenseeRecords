@@ -91,6 +91,7 @@ public class ProductController(IProductRepository productRepository, IValidator<
 	[HttpDelete("{productId}")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status409Conflict)]
 	public IActionResult DeleteProduct(int productId)
 	{
 		try
@@ -101,6 +102,10 @@ public class ProductController(IProductRepository productRepository, IValidator<
 		catch (NotFoundException ex)
 		{
 			return NotFound(ex.Message);
+		}
+		catch (ConflictException ex)
+		{
+			return Conflict(ex.Message);
 		}
 	}
 }

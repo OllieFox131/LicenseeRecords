@@ -21,7 +21,7 @@ public class ProductLicenceValidator : AbstractValidator<ProductLicence>
 		RuleFor(pl => pl.LicenceId).NotNull().WithName("Licence Id");
 		RuleFor(pl => pl.LicenceStatus).NotEmpty().WithName("Licence Status");
 		RuleFor(pl => pl.LicenceFromDate).NotEmpty().WithName("Licence From Date");
-		RuleFor(pl => pl.LicenceToDate).NotEmpty().WithName("Licence To Date");
 		RuleFor(pl => pl.LicenceToDate).GreaterThanOrEqualTo(pl => pl.LicenceFromDate).WithName("Licence To Date");
+		RuleFor(pl => pl.Product).SetValidator(new ProductValidator());
 	}
 }

@@ -65,9 +65,10 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">Account Name</th>
                         <th scope="col" class="govuk-table__header">ID</th>
+                        <th scope="col" class="govuk-table__header">Account Name</th>
                         <th scope="col" class="govuk-table__header">Status</th>
+                        <th scope="col" class="govuk-table__header">Licences</th>
                         <th scope="col" class="govuk-table__header">Actions</th>
                     </tr>
                 </thead>
@@ -75,9 +76,10 @@
                     @foreach (Account account in Model.Accounts)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">@account.AccountName</td>
                             <td class="govuk-table__cell">@account.AccountId</td>
+                            <td class="govuk-table__cell">@account.AccountName</td>
                             <td class="govuk-table__cell">@account.AccountStatus</td>
+                            <td class="govuk-table__cell">@account.ProductLicence.Count()</td>
                             <td class="govuk-table__cell">
                                 <a href="/account/view/@account.AccountId" class="govuk-button govuk-button--secondary">View</a>
                                 <a href="/account/edit/@account.AccountId" class="govuk-button govuk-button--secondary">Edit</a>
@@ -106,8 +108,8 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">Product Name</th>
                         <th scope="col" class="govuk-table__header">ID</th>
+                        <th scope="col" class="govuk-table__header">Product Name</th>
                         <th scope="col" class="govuk-table__header">Actions</th>
                     </tr>
                 </thead>
@@ -115,8 +117,8 @@
                     @foreach (Product product in Model.Products)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">@product.ProductName</td>
                             <td class="govuk-table__cell">@product.ProductId</td>
+                            <td class="govuk-table__cell">@product.ProductName</td>
                             <td class="govuk-table__cell">
                                 <a href="/product/edit/@product.ProductId" class="govuk-button govuk-button--secondary">Edit</a>
                                 <form asp-action="DeleteProduct" asp-route-productId="@product.ProductId" method="post" style="display:inline;">

@@ -2,6 +2,7 @@
 using LicenseeRecords.WebAPI.Data;
 using LicenseeRecords.WebAPI.Helpers;
 using LicenseeRecords.WebAPI.Repositories.Interfaces;
+using Microsoft.VisualBasic.FileIO;
 using static LicenseeRecords.WebAPI.Exceptions.CustomExceptions;
 
 namespace LicenseeRecords.WebAPI.Repositories.Repositories;
@@ -57,6 +58,11 @@ public class ProductRepository(IDataManager dataManager) : IProductRepository
 	public void DeleteProduct(int productId)
 	{
 		Product product = dataManager.Products.Find(a => a.ProductId == productId) ?? throw new NotFoundException($"No Product Found With ID: {productId}");
+
+		if (dataManager.Accounts.SelectMany(a => a.ProductLicence).Select(pl => pl.Product).Any(p => p.ProductId == productId))
+		{
+			throw new ConflictException($"{product.ProductName} is in use and cannot be deleted.");
+		}
 
 		dataManager.Products.Remove(product);
 		dataManager.SaveData();
