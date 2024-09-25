@@ -47,7 +47,9 @@ public class ProductController(IProductDataService productDataService, IValidato
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
-		return RedirectToAction("index", "home");
+		string? url = Url.Action("index", "home");
+
+		return Redirect(url + "#products");
 	}
 
 	[HttpPost]
@@ -72,7 +74,9 @@ public class ProductController(IProductDataService productDataService, IValidato
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
-		return RedirectToAction("index", "home");
+		string? url = Url.Action("index", "home");
+
+		return Redirect(url + "#products");
 	}
 
 

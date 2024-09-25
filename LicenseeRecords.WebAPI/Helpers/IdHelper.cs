@@ -29,6 +29,11 @@ public class IdHelper(IDataManager dataManager)
 
 	private int GetNextAccountId()
 	{
+		if (dataManager.Accounts.Count == 0)
+		{
+			return 1;
+		}
+
 		return dataManager.Accounts
 			.Select(a => a.AccountId)
 			.Max() + 1;
@@ -36,6 +41,11 @@ public class IdHelper(IDataManager dataManager)
 
 	private int GetNextLicenceId()
 	{
+		if (!dataManager.Accounts.SelectMany(a => a.ProductLicence).Any())
+		{
+			return 1;
+		}
+
 		return dataManager.Accounts
 			.SelectMany(a => a.ProductLicence)
 			.Max(pl => pl.LicenceId) + 1;
@@ -43,6 +53,11 @@ public class IdHelper(IDataManager dataManager)
 
 	private int GetNextProductId()
 	{
+		if (dataManager.Products.Count == 0)
+		{
+			return 1;
+		}
+
 		return dataManager.Products
 			.Select(p => p.ProductId)
 			.Max() + 1;

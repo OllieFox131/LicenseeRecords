@@ -63,7 +63,9 @@ public class HomeController(IAccountDataService accountDataService, IProductData
 			TempData["ErrorMessages"] = TempData.TryGetValue("ErrorMessages", out object? value) ? value + ";" + errorMessage : errorMessage;
 		}
 
-		return RedirectToAction("Index");
+		string? url = Url.Action("index");
+
+		return Redirect(url + "#products");
 	}
 
 	public IActionResult Privacy()

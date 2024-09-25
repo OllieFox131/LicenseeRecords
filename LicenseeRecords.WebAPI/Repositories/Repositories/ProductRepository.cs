@@ -52,6 +52,13 @@ public class ProductRepository(IDataManager dataManager) : IProductRepository
 		dataManager.Products.Insert(positionOfOldProduct, product);
 		dataManager.Products.Remove(oldProduct);
 
+		dataManager.Accounts
+			.SelectMany(a => a.ProductLicence)
+			.Select(pl => pl.Product)
+			.Where(pl => pl.ProductId == productId)
+			.ToList()
+			.ForEach(pl => pl.ProductName = product.ProductName);
+
 		dataManager.SaveData();
 	}
 
