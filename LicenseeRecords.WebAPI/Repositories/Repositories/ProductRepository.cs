@@ -2,7 +2,6 @@
 using LicenseeRecords.WebAPI.Data;
 using LicenseeRecords.WebAPI.Helpers;
 using LicenseeRecords.WebAPI.Repositories.Interfaces;
-using Microsoft.VisualBasic.FileIO;
 using static LicenseeRecords.WebAPI.Exceptions.CustomExceptions;
 
 namespace LicenseeRecords.WebAPI.Repositories.Repositories;

@@ -103,7 +103,7 @@ public class AccountController(IAccountDataService accountDataService, IValidato
 		#endregion
 
 		(successMessage, errorMessage) = await accountDataService.UpdateAccount(account.AccountId, account);
-		
+
 		if (successMessage is not null)
 		{
 			AddSuccessMessageToTempData(successMessage);
