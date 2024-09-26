@@ -1,9 +1,8 @@
 ﻿using LicenseeRecords.Models;
-using LicenseeRecords.Tests.Repository;
 using LicenseeRecords.WebAPI.Repositories.Repositories;
 using static LicenseeRecords.WebAPI.Exceptions.CustomExceptions;
 
-namespace FleetApi.Tests.Repositories;
+namespace LicenseeRecords.Tests.Repository;
 
 [TestFixture]
 public class ProductRepositoryTests

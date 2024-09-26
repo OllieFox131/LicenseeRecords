@@ -13,7 +13,6 @@ public class ProductLicence
 	public Product Product { get; set; } = new();
 }
 
-
 public class ProductLicenceValidator : AbstractValidator<ProductLicence>
 {
 	public ProductLicenceValidator()

@@ -8,7 +8,6 @@ public class Product
 	public string? ProductName { get; set; }
 }
 
-
 public class ProductValidator : AbstractValidator<Product>
 {
 	public ProductValidator()
@@ -17,4 +16,3 @@ public class ProductValidator : AbstractValidator<Product>
 		RuleFor(p => p.ProductName).NotEmpty().WithName("Product Name");
 	}
 }
-
